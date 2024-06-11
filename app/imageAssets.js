@@ -1,0 +1,26 @@
+const images = [
+  require('../assets/images/water/1.jpg'),
+  require('../assets/images/water/2.jpg'),
+  require('../assets/images/water/3.jpg'),
+  require('../assets/images/water/4.jpg'),
+  require('../assets/images/water/5.jpg'),
+  require('../assets/images/water/6.jpg'),
+  require('../assets/images/water/7.jpg'),
+  require('../assets/images/water/8.jpg'),
+  require('../assets/images/water/9.jpg'),
+  require('../assets/images/water/10.jpg'),
+  require('../assets/images/water/11.jpg'),
+  require('../assets/images/water/12.jpg'),
+  require('../assets/images/water/13.jpg'),
+  require('../assets/images/water/14.jpg'),
+  require('../assets/images/water/15.jpg'),
+  require('../assets/images/water/16.jpg'),
+  require('../assets/images/water/17.jpg'),
+  require('../assets/images/water/18.jpg'),
+  require('../assets/images/water/19.jpg'),
+  require('../assets/images/water/20.jpg'),
+  require('../assets/images/water/21.jpg'),
+  require('../assets/images/water/22.jpg'),
+];
+
+export default images;
