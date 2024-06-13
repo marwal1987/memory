@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,28 +6,35 @@ import {
   StyleSheet,
   Modal,
   Image,
-  Button,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import images from "./imageAssets.js";
+import CustomLink from "../components/CustomLink.js";
+import CustomButton from "../components/CustomButton.js";
 
 const levels = {
-  easy: { rows: 4, cols: 3, size: 120 },
-  medium: { rows: 7, cols: 5, size: 68 },
-  hard: { rows: 9, cols: 6, size: 55 },
+  dev: { numCards: 8, size: 160 },
+  easy: { numCards: 18, size: 110 },
+  medium: { numCards: 28, size: 91 },
+  hard: { numCards: 40, size: 71 },
+  advanced: { numCards: 54, size: 58 }
 };
 
 function generateBoard(level) {
-  const { rows, cols } = levels[level];
-  const numCards = (rows * cols) / 2;
-  const selectedImages = images.slice(0, numCards);
+  const { numCards } = levels[level];
+  const numPairs = numCards / 2;
+  const selectedImages = images.slice(0, numPairs);
+
   const cards = [...selectedImages, ...selectedImages].map((image, i) => ({
     id: i,
     image,
     flipped: false,
     matched: false,
   }));
-  return cards.sort(() => Math.random() - 0.5);
+
+  const shuffledCards = cards.sort(() => Math.random() - 0.5).slice(0, numCards);
+  
+  return shuffledCards;
 }
 
 export default function Game() {
@@ -35,19 +42,12 @@ export default function Game() {
   const [board, setBoard] = useState(generateBoard(level));
   const [selectedCards, setSelectedCards] = useState([]);
   const [matches, setMatches] = useState(0);
-  const [startTime, setStartTime] = useState(Date.now());
-  const [elapsedTime, setElapsedTime] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
-  const router = useRouter();
-
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     setElapsedTime(Date.now() - startTime);
-  //   }, 1000);
-  //   return () => clearInterval(timer);
-  // }, [startTime]);
+  const [canInteract, setCanInteract] = useState(true);
 
   function handleCardPress(index) {
+    if (!canInteract) return;
+
     const newBoard = [...board];
     const card = newBoard[index];
     if (card.flipped || card.matched) return;
@@ -57,6 +57,7 @@ export default function Game() {
     setSelectedCards([...selectedCards, index]);
 
     if (selectedCards.length === 1) {
+      setCanInteract(false);
       const [firstIndex] = selectedCards;
       const firstCard = board[firstIndex];
 
@@ -65,8 +66,9 @@ export default function Game() {
         card.matched = true;
         setMatches(matches + 1);
         setSelectedCards([]);
+        setCanInteract(true); // Allow interaction after match
 
-        if (matches + 1 === board.length / 2) {
+        if (matches + 1 === Math.ceil(board.length / 2)) {
           setModalVisible(true);
         }
       } else {
@@ -75,7 +77,8 @@ export default function Game() {
           card.flipped = false;
           setBoard([...newBoard]);
           setSelectedCards([]);
-        }, 1000);
+          setCanInteract(true);
+        }, 1600);
       }
     }
   }
@@ -83,47 +86,46 @@ export default function Game() {
   function handleNewGame() {
     setBoard(generateBoard(level));
     setMatches(0);
-    setElapsedTime(0);
-    // setStartTime(Date.now());
     setModalVisible(false);
+    setCanInteract(true);
   }
 
   const cardSize = levels[level].size;
 
   return (
     <View style={styles.container}>
-      {/* <Text style={styles.timer}>Time: {Math.floor(elapsedTime / 1000)} seconds</Text> */}
-      <View style={styles.board}>
-        {board.map((card, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[
-              styles.card,
-              card.flipped ? styles.flipped : styles.unflipped,
-              { width: cardSize, height: cardSize },
-            ]}
-            onPress={() => handleCardPress(index)}
-          >
-            {card.flipped || card.matched ? (
-              <Image
-                source={card.image}
-                style={{ width: cardSize, height: cardSize }}
-              />
-            ) : (
-              <Text style={styles.cardText}>?</Text>
-            )}
-          </TouchableOpacity>
-        ))}
-      </View>
-      <Modal visible={modalVisible} transparent={true}>
-        <View style={styles.modal}>
-          <Text style={styles.title}>
-            Congratulations! You completed the game!
-          </Text>
-          <Button title="New Game" onPress={handleNewGame} />
-          <Button title="Home" onPress={() => router.push("/home")} />
+        <View style={styles.board}>
+          {board.map((card, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.card,
+                card.flipped ? styles.flipped : styles.unflipped,
+                { width: cardSize, height: cardSize },
+              ]}
+              onPress={() => handleCardPress(index)}
+            disabled={!canInteract || card.flipped || card.matched} // Disable interaction based on canInteract state and card state
+            >
+              {card.flipped || card.matched ? (
+                <Image
+                  source={card.image}
+                  style={{ width: cardSize, height: cardSize }}
+                />
+              ) : (
+                <Text style={styles.title}>?</Text>
+              )}
+            </TouchableOpacity>
+          ))}
         </View>
-      </Modal>
+        <Modal visible={modalVisible} transparent={true}>
+          <View style={styles.modal}>
+            <Text style={styles.modalTitle}>
+              Congratulations! You completed the game!
+            </Text>
+            <CustomButton bgColor="#e5dc7b" onPress={handleNewGame} width="200px" rounded={10}>Restart</CustomButton>
+            <CustomLink bgColor="#6b9b82" href={"/home"} width="200px" rounded={10}>Home</CustomLink>
+          </View>
+        </Modal>
     </View>
   );
 }
@@ -132,21 +134,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "space-evenly",
-  },
-  containerStats: {
-    // padding: 24,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  title: {
-    fontSize: 36,
-    marginBottom: 20,
-    color: "#f1f1f1",
-  },
-  timer: {
-    textAlign: "right",
+    justifyContent: "center",
   },
   board: {
     flexDirection: "row",
@@ -154,29 +142,37 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   card: {
-    margin: 5,
+    margin: 3,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 5,
-    elevation: 3,
+    borderRadius: 10,
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: "#8ec4a8",
   },
-  cardText: {
-    fontSize: 20,
+  title: {
+    fontSize: 48,
+    fontFamily: "Handlee_400Regular",
+    textAlign: "center",
+    color: "#222",
+  },
+  modalTitle: {
+    fontSize: 48,
+    fontFamily: "Handlee_400Regular",
+    textAlign: "center",
+    color: "#fff",
   },
   flipped: {
-    backgroundColor: "#e8c128",
+    backgroundColor: "#e5dc7b",
   },
   unflipped: {
-    backgroundColor: "#9c64ce",
-  },
-  image: {
-    resizeMode: "cover",
+    backgroundColor: "#e5dc7b",
   },
   modal: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    gap: 55,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    gap: 64,
+    backgroundColor: "rgba(0, 0, 0, 0.75)",
   },
 });

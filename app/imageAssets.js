@@ -21,6 +21,11 @@ const images = [
   require('../assets/images/water/20.jpg'),
   require('../assets/images/water/21.jpg'),
   require('../assets/images/water/22.jpg'),
+  require('../assets/images/water/23.jpg'),
+  require('../assets/images/water/24.jpg'),
+  require('../assets/images/water/25.jpg'),
+  require('../assets/images/water/26.jpg'),
+  require('../assets/images/water/27.jpg'),
 ];
 
 export default images;

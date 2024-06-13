@@ -1,19 +1,18 @@
 import { StyleSheet, Text, View, ImageBackground } from "react-native";
 import CustomLink from "../components/CustomLink";
 
-const image = require("../assets/images/photos.jpg");
+const image = require("../assets/images/goldengrass.jpg");
 
 export default function Index() {
   return (
     <View style={styles.container}>
-      <ImageBackground source={image} style={styles.image} blurRadius={6}>
+      <ImageBackground source={image} style={styles.bgImage} blurRadius={0}>
         <Text style={styles.largeText}>Play MEMORY with your Memories!</Text>
         <Text style={styles.mediumText}>
           Use your own photos and start playing!
         </Text>
-        {/* <Text style={styles.mediumText}>Structure your day!</Text> */}
 
-        <CustomLink bgColor="#e8c128" width="200px" rounded={50} href={"/home"}>
+        <CustomLink bgColor="#e5dc7b" width="200px" rounded={10} href={"/home"}>
           New Game
         </CustomLink>
       </ImageBackground>
@@ -40,10 +39,10 @@ const styles = StyleSheet.create({
     maxWidth: "80%",
     textAlign: "center",
   },
-  image: {
+  bgImage: {
     flex: 1,
     width: "100%",
-    resizeMode: "cover",
+    resizeMode: "center",
     justifyContent: "center",
     alignItems: "center",
     gap: 72,

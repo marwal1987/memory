@@ -11,30 +11,40 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Lorem ipsum...</Text>
-      <Text>Choose Level:</Text>
+      <View>
+      <Text style={styles.h1}>Set level and theme</Text>
+      
+      <Text style={styles.h2}>Choose number of cards:</Text>
       <Picker
         selectedValue={level}
         onValueChange={(itemValue) => setLevel(itemValue)}
       >
-        <Picker.Item label="Level 1" value="easy" />
-        <Picker.Item label="Level 2" value="medium" />
-        <Picker.Item label="Level 3" value="hard" />
+        <Picker.Item label="8 cards (dev)" value="dev" />
+        <Picker.Item label="18 cards" value="easy" />
+        <Picker.Item label="28 cards" value="medium" />
+        <Picker.Item label="40 cards" value="hard" />
+        <Picker.Item label="54 cards" value="advanced" />
       </Picker>
-      <Text>Choose Theme:</Text>
+      
+      <Text style={styles.h2}>Choose theme:</Text>
       <Picker
         selectedValue={theme}
         onValueChange={(itemValue) => setTheme(itemValue)}
       >
         <Picker.Item label="Default" value="default" />
+        <Picker.Item label="Custom" value="custom" />
       </Picker>
+      </View>
+
+      <View>
       <CustomButton
-        bgColor="#9c64ce"
+        bgColor="#e5dc7b"
         rounded={10}
         onPress={() => router.push(`/game?level=${level}&theme=${theme}`)}
       >
         Start Game
       </CustomButton>
+      </View>
     </View>
   );
 }
@@ -42,10 +52,19 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    justifyContent: "space-between",
+    // gap: 20,
+    padding: 48,
   },
-  title: {
+  h1: {
     fontSize: 36,
     marginBottom: 20,
+    fontFamily: "Handlee_400Regular",
   },
+  h2: {
+    fontSize: 22,
+    // marginBottom: 20,
+    fontFamily: "Handlee_400Regular",
+  },
+
 });
