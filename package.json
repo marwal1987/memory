@@ -1,5 +1,5 @@
 {
-  "name": "todo-app-expo-router",
+  "name": "memory",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -35,7 +35,9 @@
     "react-native-screens": "3.31.1",
     "react-native-vector-icons": "^10.1.0",
     "react-native-web": "~0.19.10",
-    "expo-linear-gradient": "~13.0.2"
+    "expo-linear-gradient": "~13.0.2",
+    "expo-image-picker": "~15.0.5",
+    "@react-native-async-storage/async-storage": "1.23.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -26,10 +26,10 @@ export default function CustomLink(props) {
   });
 
   return (
-    <Pressable style={styles.linkContainer}>
       <Link href={href} asChild >
+    <Pressable style={styles.linkContainer}>
         <Text style={styles.text}>{children}</Text>
-      </Link>
     </Pressable>
+      </Link>
   );
 }

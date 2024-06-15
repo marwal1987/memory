@@ -32,7 +32,7 @@ export default function Home() {
         onValueChange={(itemValue) => setTheme(itemValue)}
       >
         <Picker.Item label="Default" value="default" />
-        <Picker.Item label="Custom" value="custom" />
+        <Picker.Item label="Custom (not supported yet)" value="custom" />
       </Picker>
       </View>
 

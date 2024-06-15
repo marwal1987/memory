@@ -6,13 +6,18 @@ const image = require("../assets/images/goldengrass.jpg");
 export default function Index() {
   return (
     <View style={styles.container}>
-      <ImageBackground source={image} style={styles.bgImage} blurRadius={0}>
+      <ImageBackground source={image} style={styles.bgImage} blurRadius={7}>
         <Text style={styles.largeText}>Play MEMORY with your Memories!</Text>
         <Text style={styles.mediumText}>
-          Use your own photos and start playing!
+          Use your own photos and start playing MEMORY!
         </Text>
-
-        <CustomLink bgColor="#e5dc7b" width="200px" rounded={10} href={"/home"}>
+        <CustomLink
+          bgColor="#222"
+          textColor="#e5dc7b"
+          width="200px"
+          rounded={10}
+          href={"/home"}
+        >
           New Game
         </CustomLink>
       </ImageBackground>
@@ -28,12 +33,12 @@ const styles = StyleSheet.create({
     fontSize: 36,
     fontFamily: "Handlee_400Regular",
     fontWeight: "bold",
-    color: "#000",
+    color: "#222",
     maxWidth: "80%",
     textAlign: "center",
   },
   mediumText: {
-    fontSize: 24,
+    fontSize: 28,
     color: "#222",
     fontFamily: "Handlee_400Regular",
     maxWidth: "80%",
