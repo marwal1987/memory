@@ -18,7 +18,7 @@ const levels = {
   easy: { numCards: 18, size: 110 },
   medium: { numCards: 28, size: 91 },
   hard: { numCards: 40, size: 71 },
-  advanced: { numCards: 54, size: 58 },
+  advanced: { numCards: 54, size: 62 },
 };
 
 function generateBoard(level, customImages = null) {
@@ -58,9 +58,9 @@ export default function Game() {
         if (storedImages) {
           const customImages = JSON.parse(storedImages);
           setBoard(generateBoard(level, customImages));
-        } 
+        }
       } else {
-          setBoard(generateBoard(level));
+        setBoard(generateBoard(level));
       }
     }
     loadImages();

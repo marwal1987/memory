@@ -4,6 +4,7 @@ import CustomButton from "../components/CustomButton";
 import { StyleSheet, Text, View } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
+import * as ImageManipulator from "expo-image-manipulator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Home() {
@@ -16,11 +17,22 @@ export default function Home() {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsMultipleSelection: true,
-        quality: 0,
+        quality: 1,
+        selectionLimit: 27,
       });
 
       if (!result.canceled) {
-        const newImages = result.assets.map((asset) => ({ uri: asset.uri }));
+        const newImages = await Promise.all(
+          result.assets.map(async (asset) => {
+            const manipResult = await ImageManipulator.manipulateAsync(
+              asset.uri,
+              [{ resize: { width: 160 } }],
+              { compress: 1, format: "png" }
+            );
+            return { uri: manipResult.uri };
+          })
+        );
+
         await AsyncStorage.setItem("customImages", JSON.stringify(newImages));
         router.push(`/game?level=${level}&theme=custom`);
       }
