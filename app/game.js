@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,10 +6,8 @@ import {
   StyleSheet,
   Modal,
   Image,
-  Button,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import images from "./imageAssets.js";
 import CustomLink from "../components/CustomLink.js";
@@ -23,11 +21,12 @@ const levels = {
   advanced: { numCards: 54, size: 58 },
 };
 
-function generateBoard(level, customImages = []) {
+function generateBoard(level, customImages = null) {
   const { numCards } = levels[level];
   const numPairs = numCards / 2;
-  const selectedImages =
-    customImages.length > 0 ? customImages : images.slice(0, numPairs);
+  const selectedImages = customImages
+    ? customImages.slice(0, numPairs)
+    : images.slice(0, numPairs);
 
   const cards = [...selectedImages, ...selectedImages].map((image, i) => ({
     id: i,
@@ -45,12 +44,11 @@ function generateBoard(level, customImages = []) {
 
 export default function Game() {
   const { level, theme } = useLocalSearchParams();
-  const [board, setBoard] = useState(generateBoard(level));
+  const [board, setBoard] = useState([]);
   const [selectedCards, setSelectedCards] = useState([]);
   const [matches, setMatches] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [canInteract, setCanInteract] = useState(true);
-  const [customImages, setCustomImages] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -58,47 +56,54 @@ export default function Game() {
       if (theme === "custom") {
         const storedImages = await AsyncStorage.getItem("customImages");
         if (storedImages) {
-          setCustomImages(JSON.parse(storedImages));
-        }
+          const customImages = JSON.parse(storedImages);
+          setBoard(generateBoard(level, customImages));
+        } 
+      } else {
+          setBoard(generateBoard(level));
       }
     }
     loadImages();
-  }, [theme]);
+  }, [level, theme]);
 
-  useEffect(() => {
-    setBoard(generateBoard(level, theme === "custom" ? customImages : []));
-  }, [level, theme, customImages]);
+  // useEffect(() => {
+  //   setBoard(generateBoard(level, theme === "custom" ? customImages : null));
+  // }, [level, theme, customImages]);
 
-  function handleCardPress(index) {
+  async function handleCardPress(index) {
     if (!canInteract) return;
 
     const newBoard = [...board];
     const card = newBoard[index];
 
-    if (card.flipped || card.matched ) return;
-    if (selectedCards.length === 2) return;
+    // Kontrollera om kortet redan är vändt eller redan matchat
+    if (card.flipped || card.matched) return;
 
+    // Vänd kortet
     card.flipped = true;
     setBoard(newBoard);
     setSelectedCards([...selectedCards, index]);
 
     if (selectedCards.length === 1) {
+      // Om ett kort redan är valt, hantera matchningslogik
       setCanInteract(false);
       const [firstIndex] = selectedCards;
-      const firstCard = board[firstIndex];
+      const firstCard = newBoard[firstIndex];
 
-      // Compare URIs for matching cards
       if (firstCard.image === card.image) {
+        // Om korten matchar
         firstCard.matched = true;
         card.matched = true;
         setMatches(matches + 1);
-        setSelectedCards([]);
-        setCanInteract(true);
 
         if (matches + 1 === Math.ceil(board.length / 2)) {
           setModalVisible(true);
         }
+
+        setSelectedCards([]);
+        setCanInteract(true);
       } else {
+        // Om korten inte matchar, vänd tillbaka efter en viss tid
         setTimeout(() => {
           firstCard.flipped = false;
           card.flipped = false;
@@ -107,36 +112,28 @@ export default function Game() {
           setCanInteract(true);
         }, 1600);
       }
+    } else {
+      // Om inget kort är valt, tillåt interaktion igen
+      setCanInteract(true);
     }
   }
 
-  async function handleNewGame() {
-    setBoard(generateBoard(level, theme === "custom" ? customImages : []));
+  function handleNewGame() {
+    setBoard(
+      generateBoard(
+        level,
+        theme === "custom" ? board.map((card) => card.image) : null
+      )
+    );
     setMatches(0);
     setModalVisible(false);
     setCanInteract(true);
-  }
-
-  async function pickImages() {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsMultipleSelection: true,
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      const newImages = result.assets.map((asset) => ({ uri: asset.uri }));
-      setCustomImages(newImages);
-      await AsyncStorage.setItem("customImages", JSON.stringify(newImages));
-      setBoard(generateBoard(level, newImages));
-    }
   }
 
   const cardSize = levels[level].size;
 
   return (
     <View style={styles.container}>
-      {theme === 'custom' && <Button title="Pick Images" onPress={pickImages} />}
       <View style={styles.board}>
         {board.map((card, index) => (
           <TouchableOpacity
