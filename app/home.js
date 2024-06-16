@@ -37,7 +37,6 @@ export default function Home() {
         router.push(`/game?level=${level}&theme=custom`);
       }
     } else {
-      // Om temat är default, navigera direkt till spelet utan att välja bilder
       router.push(`/game?level=${level}&theme=${theme}`);
     }
   }
@@ -49,6 +48,7 @@ export default function Home() {
 
         <Text style={styles.h2}>Choose number of cards:</Text>
         <Picker
+        style={styles.container}
           selectedValue={level}
           onValueChange={(itemValue) => setLevel(itemValue)}
         >
@@ -86,7 +86,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "space-between",
-    // gap: 20,
     padding: 48,
   },
   h1: {
