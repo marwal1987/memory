@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useRouter } from "expo-router";
+import { StyleSheet, Text, View, ImageBackground } from "react-native";
 import CustomButton from "../components/CustomButton";
-import { StyleSheet, Text, View } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const image = require("../assets/images/mountain.jpg");
 
 export default function Home() {
   const [level, setLevel] = useState("dev");
@@ -26,7 +28,7 @@ export default function Home() {
           result.assets.map(async (asset) => {
             const manipResult = await ImageManipulator.manipulateAsync(
               asset.uri,
-              [{ resize: { width: 160 } }],
+              [{ resize: { width: 800 } }],
               { compress: 1, format: "png" }
             );
             return { uri: manipResult.uri };
@@ -42,60 +44,85 @@ export default function Home() {
   }
 
   return (
-    <View style={styles.container}>
-      <View>
-        <Text style={styles.h1}>Set level and theme</Text>
+    <ImageBackground
+      source={image}
+      style={styles.bgImage}
+      blurRadius={40}
+      resizeMode="cover"
+    >
+      <View style={styles.container}>
+        <View style={styles.pickerContainer}>
+          <Text style={styles.h1}>Set level and theme</Text>
 
-        <Text style={styles.h2}>Choose number of cards:</Text>
-        <Picker
-        style={styles.container}
-          selectedValue={level}
-          onValueChange={(itemValue) => setLevel(itemValue)}
-        >
-          <Picker.Item label="8 cards" value="dev" />
-          <Picker.Item label="18 cards" value="easy" />
-          <Picker.Item label="28 cards" value="medium" />
-          <Picker.Item label="40 cards" value="hard" />
-          <Picker.Item label="54 cards" value="advanced" />
-        </Picker>
+          <Text style={styles.h2}>Choose number of cards:</Text>
+          <Picker
+            style={styles.dropdown}
+            selectedValue={level}
+            onValueChange={(itemValue) => setLevel(itemValue)}
+          >
+            <Picker.Item label="8 cards" value="dev" />
+            <Picker.Item label="18 cards" value="easy" />
+            <Picker.Item label="28 cards" value="medium" />
+            <Picker.Item label="40 cards" value="hard" />
+            <Picker.Item label="54 cards" value="advanced" />
+          </Picker>
 
-        <Text style={styles.h2}>Choose theme:</Text>
-        <Picker
-          selectedValue={theme}
-          onValueChange={(itemValue) => setTheme(itemValue)}
-        >
-          <Picker.Item label="Default" value="default" />
-          <Picker.Item label="Custom" value="custom" />
-        </Picker>
-      </View>
+          <Text style={styles.h2}>Choose theme:</Text>
+          <Picker
+            style={styles.dropdown}
+            selectedValue={theme}
+            onValueChange={(itemValue) => setTheme(itemValue)}
+          >
+            <Picker.Item label="Default" value="default" />
+            <Picker.Item label="Custom" value="custom" />
+          </Picker>
+        </View>
 
-      <View>
         <CustomButton
-          bgColor="#e5dc7b"
+          bgColor="#553355"
+          textColor="#eee"
           rounded={10}
+          width="200px"
           onPress={pickImagesAndStartGame}
         >
           Start Game
         </CustomButton>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
     justifyContent: "space-between",
     padding: 48,
   },
+  pickerContainer: {
+    justifyContent: "start",
+    gap: 20,
+  },
   h1: {
     fontSize: 36,
-    marginBottom: 20,
+    color: "#000",
     fontFamily: "Handlee_400Regular",
   },
   h2: {
-    fontSize: 22,
-    // marginBottom: 20,
+    fontSize: 24,
+    color: "#000",
     fontFamily: "Handlee_400Regular",
+  },
+  dropdown: {
+    fontSize: 22,
+    color: "#eee",
+    borderRadius: 10,
+    backgroundColor: "#553355dd",
+    width: "200px",
+  },
+  bgImage: {
+    flex: 1,
+    width: "100%",
+    // justifyContent: "space-between",
   },
 });

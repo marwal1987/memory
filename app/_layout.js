@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useFonts, Handlee_400Regular } from "@expo-google-fonts/handlee";
 import { StyleSheet, ImageBackground } from "react-native";
 
-const image = require("../assets/images/goldengrass.jpg");
+const image = require("../assets/images/mountain.jpg");
 
 export default function RootLayout() {
   const [showBackground, setShowBackground] = useState(true);
@@ -27,37 +27,37 @@ export default function RootLayout() {
   }
 
   return (
-      <Stack
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: "#6b9b82",
-          },
-          headerTintColor: "#000",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
+    <Stack
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#255525",
+        },
+        headerTintColor: "#eee",
+        headerTitleStyle: {
+          fontWeight: "bold",
+        },
+      }}
+    >
+      <Stack.Screen
+        name="index"
+        options={{
+          headerShown: false,
+          title: "",
         }}
-      >
-        <Stack.Screen
-          name="index"
-          options={{
-            headerShown: false,
-            title: "",
-          }}
-        />
-        <Stack.Screen
-          name="home"
-          options={{
-            title: "Home",
-          }}
-        />
-        <Stack.Screen
-          name="game"
-          options={{
-            title: "Playing",
-          }}
-        />
-      </Stack>
+      />
+      <Stack.Screen
+        name="home"
+        options={{
+          title: "Home",
+        }}
+      />
+      <Stack.Screen
+        name="game"
+        options={{
+          title: "Playing",
+        }}
+      />
+    </Stack>
   );
 }
 
