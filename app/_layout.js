@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useFonts, Handlee_400Regular } from "@expo-google-fonts/handlee";
 import { StyleSheet, ImageBackground } from "react-native";
 
-const image = require("../assets/images/mountain.jpg");
+const image = require("../assets/images/water/20.jpg");
 
 export default function RootLayout() {
   const [showBackground, setShowBackground] = useState(true);
@@ -30,7 +30,7 @@ export default function RootLayout() {
     <Stack
       screenOptions={{
         headerStyle: {
-          backgroundColor: "#255525",
+          backgroundColor: "#693e83",
         },
         headerTintColor: "#eee",
         headerTitleStyle: {

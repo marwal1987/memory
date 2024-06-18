@@ -7,7 +7,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const image = require("../assets/images/mountain.jpg");
+const image = require("../assets/images/water/20.jpg");
 
 export default function Home() {
   const [level, setLevel] = useState("dev");
@@ -47,12 +47,12 @@ export default function Home() {
     <ImageBackground
       source={image}
       style={styles.bgImage}
-      blurRadius={40}
+      blurRadius={15}
       resizeMode="cover"
     >
       <View style={styles.container}>
         <View style={styles.pickerContainer}>
-          <Text style={styles.h1}>Set level and theme</Text>
+          <Text style={styles.h1}>Game settings</Text>
 
           <Text style={styles.h2}>Choose number of cards:</Text>
           <Picker
@@ -76,10 +76,20 @@ export default function Home() {
             <Picker.Item label="Default" value="default" />
             <Picker.Item label="Custom" value="custom" />
           </Picker>
+
+          {/* <Text style={styles.h2}>Choose players:</Text>
+          <Picker
+            style={styles.dropdown}
+            selectedValue={player}
+            onValueChange={(itemValue) => setTheme(itemValue)}
+          >
+            <Picker.Item label="1 player" value="default" />
+            <Picker.Item label="2 players" value="custom" />
+          </Picker> */}
         </View>
 
         <CustomButton
-          bgColor="#553355"
+          bgColor="#693e83"
           textColor="#eee"
           rounded={10}
           width="200px"
@@ -101,28 +111,25 @@ const styles = StyleSheet.create({
   },
   pickerContainer: {
     justifyContent: "start",
-    gap: 20,
+    gap: 12,
   },
   h1: {
-    fontSize: 36,
-    color: "#000",
+    fontSize: 48,
+    color: "#111901",
     fontFamily: "Handlee_400Regular",
   },
   h2: {
     fontSize: 24,
-    color: "#000",
+    color: "#111901",
     fontFamily: "Handlee_400Regular",
   },
   dropdown: {
-    fontSize: 22,
-    color: "#eee",
-    borderRadius: 10,
-    backgroundColor: "#553355dd",
-    width: "200px",
+    fontSize: 18,
+    color: "#fff",
+    backgroundColor: "#693E83dd",
   },
   bgImage: {
     flex: 1,
     width: "100%",
-    // justifyContent: "space-between",
   },
 });

@@ -14,14 +14,14 @@ import images from "./imageAssets.js";
 import CustomLink from "../components/CustomLink.js";
 import CustomButton from "../components/CustomButton.js";
 
-const image = require("../assets/images/white-pattern.jpg");
+const image = require("../assets/images/water/20.jpg");
 
 const levels = {
   dev: { numCards: 8, size: 165 },
-  easy: { numCards: 18, size: 120 },
-  medium: { numCards: 28, size: 95 },
-  hard: { numCards: 40, size: 75 },
-  advanced: { numCards: 54, size: 62 },
+  easy: { numCards: 18, size: 110 },
+  medium: { numCards: 28, size: 85 },
+  hard: { numCards: 40, size: 71 },
+  advanced: { numCards: 54, size: 58 },
 };
 
 function generateBoard(level, customImages = null) {
@@ -130,7 +130,7 @@ export default function Game() {
   const cardSize = levels[level].size;
 
   return (
-    <ImageBackground source={image} style={styles.bgImage} blurRadius={50}>
+    <ImageBackground source={image} style={styles.bgImage} blurRadius={500}>
       <View style={styles.container}>
         <View style={styles.board}>
           {board.map((card, index) => (
@@ -161,7 +161,7 @@ export default function Game() {
               Congratulations! You completed the game!
             </Text>
             <CustomButton
-              bgColor="#553355"
+              bgColor="#693e83"
               textColor="#eee"
               onPress={handleNewGame}
               rounded={10}
@@ -169,7 +169,7 @@ export default function Game() {
               Restart
             </CustomButton>
             <CustomLink
-              bgColor="#255525"
+              bgColor="#3e8369"
               textColor="#eee"
               href={"/home"}
               rounded={10}
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     elevation: 5,
     borderWidth: 1,
-    borderColor: "#434f22",
+    borderColor: "#ddd",
   },
   cardText: {
     fontSize: 48,
@@ -213,13 +213,13 @@ const styles = StyleSheet.create({
     fontSize: 48,
     fontFamily: "Handlee_400Regular",
     textAlign: "center",
-    color: "#fff",
+    color: "#eee",
   },
   flipped: {
-    backgroundColor: "#255525",
+    backgroundColor: "#3e8369",
   },
   unflipped: {
-    backgroundColor: "#553355",
+    backgroundColor: "#3e8369",
   },
   modal: {
     flex: 1,
